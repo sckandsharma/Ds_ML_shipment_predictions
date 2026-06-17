@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-# from from_root import from_root
+# from os.getcwd import os.getcwd
 import os
 # from shipment.configuration.s3_operations import S3Operation
 from shipment.utils.main_utils import MainUtils
@@ -79,4 +79,23 @@ class DataTransformationConfig:
             PREPROCESSOR_OBJECT_FILE_NAME,
         )
 
-        
+
+
+
+## Model Trainer Configurations
+@dataclass
+class ModelTrainerConfig:
+    def __init__(self):
+        self.UTILS = MainUtils()
+        self.DATA_TRANSFORMATION_ARTIFACTS_DIR: str = os.path.join(
+            os.getcwd(), ARTIFACTS_DIR, DATA_TRANSFORMATION_ARTIFACTS_DIR
+        )
+        self.MODEL_TRAINER_ARTIFACTS_DIR: str = os.path.join(
+            os.getcwd(), ARTIFACTS_DIR, MODEL_TRAINER_ARTIFACTS_DIR
+        )
+        self.PREPROCESSOR_OBJECT_FILE_PATH: str = os.path.join(
+            self.DATA_TRANSFORMATION_ARTIFACTS_DIR, PREPROCESSOR_OBJECT_FILE_NAME
+        )
+        self.TRAINED_MODEL_FILE_PATH: str = os.path.join(
+            os.getcwd(), ARTIFACTS_DIR, MODEL_TRAINER_ARTIFACTS_DIR, MODEL_FILE_NAME
+        )

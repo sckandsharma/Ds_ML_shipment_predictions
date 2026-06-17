@@ -113,7 +113,7 @@ class MainUtils:
         try:
             VERBOSE = 3
             CV = 2
-            N_JOBS = -1
+            N_JOBS = 1
 
             model_name = model.__class__.__name__
             model_config = self.read_yaml_file(filename=MODEL_CONFIG_FILE)
