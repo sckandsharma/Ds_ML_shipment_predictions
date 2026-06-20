@@ -1,5 +1,5 @@
 import os
-import logging
+from shipment.logger import logging
 import sys
 from pandas import DataFrame
 import numpy as np

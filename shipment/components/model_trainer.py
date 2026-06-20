@@ -1,5 +1,5 @@
 import os
-import logging
+from shipment.logger import logging
 import sys
 import pandas as pd
 from typing import List, Tuple

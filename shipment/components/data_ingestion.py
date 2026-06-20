@@ -1,6 +1,6 @@
 import sys
 import os
-import logging
+from shipment.logger import logging
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 from typing import Tuple

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 # from os.getcwd import os.getcwd
 import os
-# from shipment.configuration.s3_operations import S3Operation
+from shipment.configuration.s3_operations import S3Operation
 from shipment.utils.main_utils import MainUtils
 from shipment.constant import *
 
@@ -97,5 +97,18 @@ class ModelTrainerConfig:
             self.DATA_TRANSFORMATION_ARTIFACTS_DIR, PREPROCESSOR_OBJECT_FILE_NAME
         )
         self.TRAINED_MODEL_FILE_PATH: str = os.path.join(
+            os.getcwd(), ARTIFACTS_DIR, MODEL_TRAINER_ARTIFACTS_DIR, MODEL_FILE_NAME
+        )
+
+
+
+# Model Evaluation Configurations
+@dataclass
+class ModelEvaluationConfig:
+    def __init__(self):
+        self.S3_OPERATIONS = S3Operation()
+        self.UTILS = MainUtils()
+        self.BUCKET_NAME: str = BUCKET_NAME
+        self.BEST_MODEL_PATH: str = os.path.join(
             os.getcwd(), ARTIFACTS_DIR, MODEL_TRAINER_ARTIFACTS_DIR, MODEL_FILE_NAME
         )

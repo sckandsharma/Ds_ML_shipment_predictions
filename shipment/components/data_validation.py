@@ -1,5 +1,5 @@
 import json
-import logging
+from shipment.logger import logging
 import sys
 import os
 import pandas as pd

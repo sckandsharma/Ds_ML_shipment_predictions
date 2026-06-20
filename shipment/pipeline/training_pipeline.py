@@ -6,16 +6,26 @@ logger = logging.getLogger(__name__)
 
 from shipment.configuration.mongo_operations import MongoDBOperation
 from shipment.entity.artifacts_entity import (
-    DataIngestionArtifacts,DataValidationArtifacts,DataTransformationArtifacts,ModelTrainerArtifacts
+    DataIngestionArtifacts,
+    DataValidationArtifacts,
+    DataTransformationArtifacts,
+    ModelTrainerArtifacts,
+    ModelEvaluationArtifact,
 )
 from shipment.entity.config_entity import (
-    DataIngestionConfig,DataValidationConfig,DataTransformationConfig,ModelTrainerConfig
+    DataIngestionConfig,
+    DataValidationConfig,
+    DataTransformationConfig,
+    ModelTrainerConfig,
+    ModelEvaluationConfig
     )
 
 from shipment.components.data_ingestion import DataIngestion
 from shipment.components.data_validation import DataValidation
 from shipment.components.data_transformation import DataTransformation
 from shipment.components.model_trainer import ModelTrainer
+from shipment.components.model_evaluation import ModelEvaluation
+from shipment.configuration.s3_operations import S3Operation
 
 class TrainPipeline:
     def __init__(self):
@@ -23,6 +33,8 @@ class TrainPipeline:
         self.data_validation_config = DataValidationConfig()
         self.data_transformation_config = DataTransformationConfig()
         self.model_trainer_config = ModelTrainerConfig()
+        self.model_evaluation_config = ModelEvaluationConfig()
+        self.s3_operations = S3Operation()
         self.mongo_op = MongoDBOperation()
 
     # This method is used to start the data ingestion
@@ -106,6 +118,25 @@ class TrainPipeline:
 
         except Exception as e:
             raise shippingException(e, sys) from e
+        
+
+    # This method is used to start the model evaluation
+    def start_model_evaluation(
+        self,
+        data_ingestion_artifact: DataIngestionArtifacts,
+        model_trainer_artifact: ModelTrainerArtifacts,
+    ) -> ModelEvaluationArtifact:
+        try:
+            model_evaluation = ModelEvaluation(
+                model_evaluation_config=self.model_evaluation_config,
+                data_ingestion_artifact=data_ingestion_artifact,
+                model_trainer_artifact=model_trainer_artifact,
+            )
+            model_evaluation_artifact = model_evaluation.initiate_model_evaluation()
+            return model_evaluation_artifact
+
+        except Exception as e:
+            raise shippingException(e, sys) from e
 
 
         
@@ -124,6 +155,17 @@ class TrainPipeline:
 
             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact
             )
+
+            model_evaluation_artifact = self.start_model_evaluation(
+                data_ingestion_artifact=data_ingestion_artifact,
+                model_trainer_artifact=model_trainer_artifact,
+            )
+
+            if not model_evaluation_artifact.is_model_accepted:
+                print("Model not accepted")
+            
+            else:
+                print("Model accepted")
 
 
             logger.info("Exited the run_pipeline method of TrainPipeline class")
