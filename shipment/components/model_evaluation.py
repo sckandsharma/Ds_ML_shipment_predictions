@@ -59,7 +59,7 @@ class ModelEvaluation:
             # If model is present then loading the model
             if status == True:
                 model = self.model_evaluation_config.S3_OPERATIONS.load_model(
-                    MODEL_FILE_NAME, BUCKET_NAME
+                    S3_MODEL_NAME, BUCKET_NAME
                 )
                 logger.info("Exited the get_s3_model method of Model Evaluation class")
                 return model
