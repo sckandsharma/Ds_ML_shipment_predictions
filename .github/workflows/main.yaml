@@ -91,8 +91,7 @@ jobs:
 
       - name: Run Docker Image to serve users
         run: |
-          docker run -d -p 8080:8080 --name=shipment -e 'MONGO_DB_URL=${{ secrets.MONGO_DB_URL }}'
-
+          docker run -d -p 8080:8080 --name=sensor -e 'MONGO_DB_URL=${{ secrets.MONGO_DB_URL }}' ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
       - name: Clean previous images and containers
         run: |
           docker system prune -f
